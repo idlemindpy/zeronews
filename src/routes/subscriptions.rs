@@ -18,7 +18,6 @@ pub struct FormData {
             sub_name = %form.name
     )
 )]
-
 pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> HttpResponse {
     match insert_subscriber(&pool, &form).await {
         Ok(_) => HttpResponse::Ok().finish(),
