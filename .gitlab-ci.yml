@@ -14,7 +14,7 @@ stages:
 test-code:
   stage: test
   script:
-    - SQLX_OFFLINE=true cargo test
+    - cargo test
     - cargo install cargo-tarpaulin
     - cargo tarpaulin --ignore-tests
 
