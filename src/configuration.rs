@@ -1,18 +1,18 @@
 use secrecy::{ExposeSecret, Secret};
 
-#[derive(serde::Deserialize)]
+#[derive(serde::Deserialize, Debug)]
 pub struct Settings {
     pub database: DatabaseSettings,
     pub app: ApplicationSettings,
 }
 
-#[derive(serde::Deserialize)]
+#[derive(serde::Deserialize, Debug)]
 pub struct ApplicationSettings {
     pub port: u16,
     pub host: String,
 }
 
-#[derive(serde::Deserialize)]
+#[derive(serde::Deserialize, Debug)]
 pub struct DatabaseSettings {
     pub username: String,
     pub password: Secret<String>,
@@ -86,8 +86,9 @@ pub fn get_configuration() -> Result<Settings, config::ConfigError> {
     let env_filename = format!("{}.yaml", environment.as_str());
 
     let settings = config::Config::builder()
+        .add_source(config::File::from(config_directory.join("base.yaml")))
         .add_source(config::File::from(config_directory.join(env_filename)))
         .build()?;
 
-    setting.try_deserialize::<Settings>()
+    settings.try_deserialize::<Settings>()
 }
