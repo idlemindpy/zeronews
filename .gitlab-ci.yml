@@ -14,7 +14,7 @@ stages:
 test-code:
   stage: test
   script:
-    - cargo test
+    - SQLX_OFFLINE=true cargo test
     - cargo install cargo-tarpaulin
     - cargo tarpaulin --ignore-tests
 
@@ -22,7 +22,7 @@ lint-code:
   stage: test
   script:
     - rustup component add clippy
-    - cargo clippy -- -D warnings
+    - SQLX_OFFLINE=true cargo clippy -- -D warnings
     
 format-code:
   stage: test
@@ -34,4 +34,4 @@ audit-code:
   stage: test
   script:
     - cargo install cargo-audit
-    - cargo audit
+    - SQLX_OFFLINE=true cargo audit
