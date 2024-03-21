@@ -1,0 +1,15 @@
+#! spec.yaml
+
+name: zero
+region: TOR
+services: 
+  - name: zero
+
+dockerfile_path: Dockerfile
+
+source_dir: .
+
+gitlab:
+  branch: main
+  deploy_on_push: true
+  repo: idlemind-rust/newsletter
