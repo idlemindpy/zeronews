@@ -1,16 +1,16 @@
 #! spec.yaml
 
 name: zero
-region: TOR
+region: tor1
 services:
   - name: zero
     dockerfile_path: Dockerfile
     source_dir: .
 
-    gitlab:
+    github:
       branch: main
       deploy_on_push: true
-      repo: idlemind-rust/newsletter.git
+      repo: idlemindpy/zeronews
 
     health_check:
       http_path: /health-check
