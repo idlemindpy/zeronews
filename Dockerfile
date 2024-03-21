@@ -13,7 +13,7 @@ RUN cargo chef cook --release --recipe-path recipe.json
 COPY . .
 ENV SQLX_OFFLINE true
 # Build our project
-RUN cargo build --release --bin zero2prod
+RUN cargo build --release --bin zero
 
 FROM debian:bookworm-slim AS runtime
 WORKDIR /app
