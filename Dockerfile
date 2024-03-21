@@ -24,6 +24,6 @@ RUN apt-get update -y \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/target/release/zero zero
-COPY --from=builder /app/configuration configuration
+#COPY configuration configuration
 ENV APP_ENVIRONMENT production
 ENTRYPOINT ["./zero"]
