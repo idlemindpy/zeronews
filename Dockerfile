@@ -1,6 +1,5 @@
-FROM lukemathwalker/cargo-chef:latest-rust-1.72.0 as chef
+FROM lukemathwalker/cargo-chef:latest-rust-1.76.0 as chef
 WORKDIR /app
-RUN apt update && apt install lld clang -y
 
 FROM chef as planner
 COPY . .
@@ -24,7 +23,7 @@ RUN apt-get update -y \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
-COPY --from=builder /app/target/release/zero2prod zero2prod
+COPY --from=builder /app/target/release/zero zero
 COPY configuration configuration
 ENV APP_ENVIRONMENT production
-ENTRYPOINT ["./zero2prod"]
+ENTRYPOINT ["./zero"]
