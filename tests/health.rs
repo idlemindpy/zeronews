@@ -1,8 +1,10 @@
 use once_cell::sync::Lazy;
+use secrecy::{ExposeSecret, Secret};
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 use std::net::TcpListener;
 use uuid::Uuid;
 use zero::configuration::{get_configuration, DatabaseSettings};
+use zero::email_client::EmailClient;
 use zero::startup::run;
 use zero::telemetry::{get_subscriber, init_subscriber};
 
@@ -135,7 +137,22 @@ async fn spawn_app() -> TestApp {
 
     let connection_pool = configure_database(&config.database).await;
 
-    let server = run(listener, connection_pool.clone()).expect("Failed to bind address.");
+    let sender_email = config
+        .email_client
+        .sender()
+        .expect("Invalid sender email address.");
+
+    let timeout = config.email_client.timeout();
+
+    let email_client = EmailClient::new(
+        config.email_client.base_url,
+        sender_email,
+        config.email_client.authorization_token,
+        timeout,
+    );
+
+    let server =
+        run(listener, connection_pool.clone(), email_client).expect("Failed to bind address.");
     let _ = tokio::spawn(server);
 
     TestApp {

@@ -1,6 +1,6 @@
 use validator::ValidateEmail;
 
-#[derive(Debug)]
+#[derive(Debug, serde::Deserialize)]
 pub struct SubscriberEmail(String);
 
 impl SubscriberEmail {
@@ -22,14 +22,23 @@ impl AsRef<str> for SubscriberEmail {
 #[cfg(test)]
 mod tests {
     use super::SubscriberEmail;
-    use claims::{assert_err, assert_ok};
+    use claims::assert_err;
     use fake::faker::internet::en::SafeEmail;
     use fake::Fake;
 
-    #[test]
-    fn valid_email_ok() {
-        let email = SafeEmail().fake();
-        assert_ok!(SubscriberEmail::parse(email));
+    #[derive(Debug, Clone)]
+    struct ValidEmailFixture(pub String);
+
+    impl quickcheck::Arbitrary for ValidEmailFixture {
+        fn arbitrary<G: quickcheck::Gen>(g: &mut G) -> Self {
+            let email = SafeEmail().fake_with_rng(g);
+            Self(email)
+        }
+    }
+
+    #[quickcheck_macros::quickcheck]
+    fn valid_email_ok(valid_email: ValidEmailFixture) -> bool {
+        SubscriberEmail::parse(valid_email.0).is_ok()
     }
 
     #[test]
