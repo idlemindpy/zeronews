@@ -40,3 +40,4 @@ rand_core = "0.6.4"
 tokio = { version = "1", features = ["rt", "macros"] }
 wiremock = "0.6.0"
 serde_json = "1.0.114"
+linkify = "0.10.0"
