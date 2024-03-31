@@ -122,3 +122,18 @@ async fn present_but_empty_fields() {
         );
     }
 }
+
+#[tokio::test]
+async fn subscribe_fails_if_fatal_database_error() {
+    let app = spawn_app().await;
+    let body = "name=le%20chien&email=cedar%40gmail.com";
+
+    sqlx::query!("ALTER TABLE subscription_tokens DROP COLUMN subscription_token;",)
+        .execute(&app.db_pool)
+        .await
+        .unwrap();
+
+    let response = app.post_subscriptions(body.into()).await;
+
+    assert_eq!(response.status().as_u16(), 500);
+}
